@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕒</text></svg>" />
+    <title>IsMail · Digital Clock Pro</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+    <!-- ===== CANVAS PARTICLES ===== -->
+    <canvas id="particlesCanvas"></canvas>
+
+    <!-- ===== WATERMARK ===== -->
+    <div class="watermark">
+        <i class="fas fa-crown"></i> <span>IsMail</span> · Hossen
+    </div>
+
+    <div class="clock-panel" id="clockPanel">
+
+        <!-- ===== HEADER ===== -->
+        <div class="clock-header">
+            <div class="clock-title">
+                <i class="fas fa-clock"></i> Digital Clock
+                <span class="owner-name"><i class="fas fa-user-astronaut"></i> IsMail</span>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i> <span id="themeLabel">Dark</span>
+            </button>
+        </div>
+
+        <!-- ===== TIME ===== -->
+        <div class="time-display" id="timeDisplay">
+            <span id="hours">00</span>
+            <span class="blink-colon">:</span>
+            <span id="minutes">00</span>
+            <span class="blink-colon">:</span>
+            <span id="seconds">00</span>
+            <span class="ampm" id="ampm">AM</span>
+        </div>
+
+        <!-- ===== DATE & DAY ===== -->
+        <div class="date-display" id="dateDisplay">
+            <i class="fas fa-calendar-alt"></i> <span id="dateText">January 01, 2026</span>
+        </div>
+        <div class="day-display" id="dayDisplay">
+            <span id="dayText">Monday</span>
+        </div>
+
+        <!-- ===== SECONDS RING ===== -->
+        <div class="seconds-ring">
+            <span class="sec-label" id="secLabel">00</span>
+            <div class="ring-track">
+                <div class="ring-fill" id="ringFill"></div>
+            </div>
+            <span class="sec-label">s</span>
+        </div>
+
+        <!-- ===== QUOTE BOX ===== -->
+        <div class="quote-box" id="quoteBox">
+            <div class="quote-text" id="quoteText">
+                <i class="fas fa-quote-left quote-icon"></i> Stay positive, work hard, make it happen.
+            </div>
+            <div class="quote-author" id="quoteAuthor">— Unknown</div>
+        </div>
+
+        <!-- ===== RINGING CONTROLS ===== -->
+        <div class="ringing-controls" id="ringingControls">
+            <button class="snooze-btn" id="snoozeBtn"><i class="fas fa-clock"></i> Snooze (5m)</button>
+            <button class="stop-alarm-btn" id="stopAlarmBtn"><i class="fas fa-stop"></i> Stop Alarm</button>
+        </div>
+
+        <!-- ===== TABS ===== -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="alarm"><i class="fas fa-bell"></i> Alarm</button>
+            <button class="tab-btn" data-tab="stopwatch"><i class="fas fa-stopwatch"></i> Stopwatch</button>
+            <button class="tab-btn" data-tab="timer"><i class="fas fa-hourglass-half"></i> Timer</button>
+            <button class="tab-btn" data-tab="pomodoro"><i class="fas fa-brain"></i> Pomodoro</button>
+            <button class="tab-btn" data-tab="world"><i class="fas fa-globe"></i> World</button>
+            <button class="tab-btn" data-tab="countdown"><i class="fas fa-calendar-day"></i> Countdown</button>
+            <button class="tab-btn" data-tab="theme"><i class="fas fa-palette"></i> Theme</button>
+        </div>
+
+        <!-- ===== TAB: ALARM ===== -->
+        <div class="tab-content active" id="tab-alarm">
+            <div class="alarm-inputs">
+                <input type="time" id="alarmTimeInput" value="08:00" />
+                <button class="add-alarm-btn" id="addAlarmBtn"><i class="fas fa-plus"></i> Set Alarm</button>
+            </div>
+            <div class="alarm-list" id="alarmList">
+                <div class="empty-message">No alarms set. Add one above!</div>
+            </div>
+        </div>
+
+        <!-- ===== TAB: STOPWATCH ===== -->
+        <div class="tab-content" id="tab-stopwatch">
+            <div class="stopwatch-display" id="stopwatchDisplay">00:00:00.00</div>
+            <div class="stopwatch-controls">
+                <button class="sw-start" id="swStartBtn"><i class="fas fa-play"></i> Start</button>
+                <button class="sw-lap" id="swLapBtn"><i class="fas fa-flag"></i> Lap</button>
+                <button class="sw-reset" id="swResetBtn"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+            <div class="laps-list" id="lapsList">
+                <div class="empty-message">No laps recorded.</div>
+            </div>
+        </div>
+
+        <!-- ===== TAB: TIMER ===== -->
+        <div class="tab-content" id="tab-timer">
+            <div class="timer-display" id="timerDisplay">05:00</div>
+            <div class="timer-inputs">
+                <input type="number" id="timerMinutes" value="5" min="1" max="120" />
+                <span class="timer-label">min</span>
+                <input type="number" id="timerSeconds" value="0" min="0" max="59" />
+                <span class="timer-label">sec</span>
+            </div>
+            <div class="timer-controls">
+                <button class="timer-start" id="timerStartBtn"><i class="fas fa-play"></i> Start</button>
+                <button class="timer-reset" id="timerResetBtn"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+        </div>
+
+        <!-- ===== TAB: POMODORO ===== -->
+        <div class="tab-content" id="tab-pomodoro">
+            <div class="pomodoro-display" id="pomodoroDisplay">25:00</div>
+            <div class="pomodoro-status" id="pomodoroStatus">🎯 Focus time</div>
+            <div class="pomodoro-controls">
+                <button class="active" data-pomo="25"><i class="fas fa-bullseye"></i> 25m</button>
+                <button data-pomo="50"><i class="fas fa-rocket"></i> 50m</button>
+                <button data-pomo="5"><i class="fas fa-coffee"></i> 5m</button>
+                <button data-pomo="15"><i class="fas fa-mug-hot"></i> 15m</button>
+            </div>
+            <div class="timer-controls" style="margin-top:0.8rem;">
+                <button class="timer-start" id="pomoStartBtn"><i class="fas fa-play"></i> Start</button>
+                <button class="timer-reset" id="pomoResetBtn"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+        </div>
+
+        <!-- ===== TAB: WORLD CLOCK ===== -->
+        <div class="tab-content" id="tab-world">
+            <div class="world-clock-grid" id="worldClockGrid">
+                <!-- JS দিয়ে ডাইনামিক দেখাবে -->
+            </div>
+        </div>
+
+        <!-- ===== TAB: COUNTDOWN ===== -->
+        <div class="tab-content" id="tab-countdown">
+            <div class="countdown-inputs">
+                <input type="date" id="countdownDate" />
+                <button id="setCountdownBtn"><i class="fas fa-calendar-check"></i> Set</button>
+                <button id="clearCountdownBtn"><i class="fas fa-undo"></i> Clear</button>
+            </div>
+            <div class="countdown-display" id="countdownDisplay">
+                <div class="countdown-unit"><div class="countdown-number" id="cdDays">00</div>Days</div>
+                <div class="countdown-unit"><div class="countdown-number" id="cdHours">00</div>Hours</div>
+                <div class="countdown-unit"><div class="countdown-number" id="cdMinutes">00</div>Minutes</div>
+                <div class="countdown-unit"><div class="countdown-number" id="cdSeconds">00</div>Seconds</div>
+            </div>
+        </div>
+
+        <!-- ===== TAB: THEME ===== -->
+        <div class="tab-content" id="tab-theme">
+            <div class="theme-presets" id="themePresets">
+                <button style="background:linear-gradient(135deg,#0f172a,#020617);" data-theme="default" class="active-preset"></button>
+                <button style="background:linear-gradient(135deg,#1a1a2e,#16213e);" data-theme="darkblue"></button>
+                <button style="background:linear-gradient(135deg,#2d1b3d,#1a1a2e);" data-theme="purple"></button>
+                <button style="background:linear-gradient(135deg,#0b3d2e,#1a4a3a);" data-theme="green"></button>
+                <button style="background:linear-gradient(135deg,#3d1b1b,#5a2a2a);" data-theme="wine"></button>
+                <button style="background:linear-gradient(135deg,#1b2a4a,#0f1f3a);" data-theme="ocean"></button>
+                <button style="background:linear-gradient(135deg,#2a2a1a,#3d3d1a);" data-theme="olive"></button>
+            </div>
+            <div class="custom-color-input">
+                <label><i class="fas fa-fill-drip"></i> Custom BG:</label>
+                <input type="color" id="customBgColor" value="#0f172a" />
+                <label style="margin-left:0.5rem;"><i class="fas fa-border-all"></i> Border:</label>
+                <input type="color" id="customBorderColor" value="rgba(255,255,255,0.06)" />
+            </div>
+            <div style="text-align:center;margin-top:0.8rem;font-size:0.75rem;color:#4a5268;">
+                <i class="fas fa-magic"></i> Choose a preset or pick custom colors
+            </div>
+        </div>
+
+        <!-- ===== CONTROLS ===== -->
+        <div class="controls">
+            <button id="toggleFormatBtn" class="active"><i class="fas fa-clock"></i> 24h</button>
+            <button id="toggleSecondsBtn" class="active"><i class="fas fa-eye"></i> Seconds</button>
+        </div>
+
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

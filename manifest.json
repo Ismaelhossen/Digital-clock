@@ -1,0 +1,23 @@
+  "name": "IsMail Digital Clock",
+  "short_name": "IsMail Clock",
+  "description": "একটি সম্পূর্ণ ডিজিটাল ক্লক অ্যাপ – অ্যালার্ম, স্টপওয়াচ, টাইমার, পোমোডোরো, ওয়ার্ল্ড ক্লক, কাউন্টডাউন ও আরও অনেক কিছু",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕒</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕒</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
